@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=testsystem
+      - POSTGRES_PASSWORD=zir8VqA23AL18U56DKyEhQ
+      - POSTGRES_DB=testsystem
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "testsystem" ]
+      interval: 5s
+      retries: 5
+
+  etl:
+    build:
+      context: ./etl
+    volumes:
+      - ./etl:/opt/node_app
+      - /opt/node_app/node_modules
+
+volumes:
+  postgres-db-volume:
